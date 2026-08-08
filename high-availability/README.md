@@ -1,48 +1,23 @@
-# AWSインフラ設計・構築
+# Pattern 1 - 高可用Webアーキテクチャ
 
-AWSインフラ設計・構築およびTerraformによるInfrastructure as Code（IaC）の学習・検証リポジトリです。  
-AWSコンソールで設計・構築・動作確認した環境をTerraformでコード化し、設計から構築・検証まで一貫して実施しています。  
-Terraformの文法を学ぶことだけではなく、AWSサービスの役割や設計意図を理解し、Infrastructure as Code（IaC）として再現できることを目的としています。  
-本リポジトリでは、AWSで利用される代表的なアーキテクチャを題材に、設計・構築・IaCまでを一貫して学習・実装していきます。  
+## 概要
 
----
-
-# 学習方針
-
-本リポジトリでは、以下の流れで学習を進めています。
-
-1. AWSコンソールで設計・構築
-2. 動作確認
-3. 構築手順の整理
-4. TerraformによるIaC化
-5. `terraform plan` / `terraform apply` / `terraform destroy` による検証
-6. GitHubによるソースコード管理
+本プロジェクトでは、AWS上に高可用なWebアーキテクチャを構築し、AWSコンソールで設計・構築・動作確認した構成をTerraformでコード化しています。  
+Terraformの文法を学ぶだけでなく、AWSサービスの役割や設計意図を理解し、Infrastructure as Code（IaC）として再現することを目的としています。  
 
 ---
 
-# プロジェクト一覧
+# システム構成
 
-| 状態 | パターン | 内容 |
-|------|----------|------|
-| Completed | Pattern 1 | 高可用Webアーキテクチャ |
-| In Progress | Pattern 2 | イベント駆動アーキテクチャ |
-| Planned | Pattern 3 | CI/CDパイプライン |
-| Planned | Pattern 4 | サーバーレスアーキテクチャ |
-| Planned | Pattern 5 | コンテナアーキテクチャ |
-| Planned | Pattern 6 | 静的サイト配信アーキテクチャ |
+![High Availability Architecture](docs/high-availability.png)
 
 ---
 
-# プロジェクト
-
-## Pattern 1 - 高可用Webアーキテクチャ
-
-AWS上に高可用なWebアーキテクチャを構築し、AWSコンソールで設計・構築した構成をTerraformでコード化しています。
-
-### 主な構成
+# 使用サービス
 
 - Amazon VPC
-- Public / Private Subnet
+- Public Subnet
+- Private Subnet
 - Internet Gateway
 - Route Table
 - Security Group
@@ -54,75 +29,107 @@ AWS上に高可用なWebアーキテクチャを構築し、AWSコンソール�
 - Amazon RDS
 - Terraform
 
-詳細は `high-availability/README.md` を参照してください。
+---
+
+# ディレクトリ構成
+
+```text
+high-availability/
+├── README.md
+├── docs/
+│   └── high-availability.png
+└── terraform/
+    ├── providers.tf
+    ├── versions.tf
+    ├── vpc.tf
+    ├── subnet.tf
+    ├── igw.tf
+    ├── route_table.tf
+    ├── security_group.tf
+    ├── target_group.tf
+    ├── iam.tf
+    ├── launch_template.tf
+    ├── load_balancer.tf
+    ├── auto_scaling_group.tf
+    ├── rds.tf
+    ├── variables.tf
+    └── terraform.tfvars.example
+```
 
 ---
 
-## Pattern 2 - イベント駆動アーキテクチャ
+# Terraform構成
 
-AWSイベントを契機とした自動処理アーキテクチャを構築します。
+AWSリソースごとにTerraformファイルを分割し、AWSコンソールで構築した構成との対応が分かるよう管理しています。
 
-### 学習予定サービス
-
-- Amazon EventBridge
-- AWS Lambda
-- Amazon SNS
-- Amazon SQS
-- Amazon CloudWatch
-
----
-
-## Pattern 3 - CI/CDパイプライン
-
-ソースコード管理からデプロイまでの自動化基盤を構築します。
-
-### 学習予定サービス
-
-- GitHub Actions
-- AWS CodePipeline
-- AWS CodeBuild
-- AWS CodeDeploy
+| Terraform | AWSリソース |
+|-----------|------------|
+| `vpc.tf` | Amazon VPC |
+| `subnet.tf` | Public / Private Subnet |
+| `igw.tf` | Internet Gateway |
+| `route_table.tf` | Route Table |
+| `security_group.tf` | Security Group |
+| `target_group.tf` | Target Group |
+| `iam.tf` | IAM Role / Instance Profile |
+| `launch_template.tf` | Launch Template |
+| `load_balancer.tf` | Application Load Balancer |
+| `auto_scaling_group.tf` | Auto Scaling Group |
+| `rds.tf` | Amazon RDS |
 
 ---
 
-## Pattern 4 - サーバーレスアーキテクチャ
+# 動作確認
 
-サーバーレスアーキテクチャを構築します。
+以下の内容について動作確認を実施しています。
 
-### 学習予定サービス
-
-- Amazon API Gateway
-- AWS Lambda
-- Amazon DynamoDB
-
----
-
-## Pattern 5 - コンテナアーキテクチャ
-
-コンテナを利用したアプリケーション実行アーキテクチャを構築します。
-
-### 学習予定サービス
-
-- Amazon ECS
-- Amazon ECR
-- Application Load Balancer
-- Auto Scaling
+- `terraform fmt`
+- `terraform validate`
+- `terraform plan`
+- `terraform apply`
+- `terraform destroy`
 
 ---
 
-## Pattern 6 - 静的サイト配信アーキテクチャ
+# 検証結果
 
-静的Webサイト配信アーキテクチャを構築します。
-
-### 学習予定サービス
-
-- Amazon S3
-- Amazon CloudFront
-- Amazon Route 53
-- AWS Certificate Manager（ACM）
+- TerraformからAWSリソースを正常に作成できることを確認
+- TerraformからAWSリソースを正常に削除できることを確認
+- Application Load Balancer経由でAuto Scaling Groupへトラフィックを分散する構成を確認
+- EC2はPrivate Subnetへ配置
+- NAT Gatewayを作成していないため、UserData内の `dnf install nginx` は失敗
+- 上記はPrivate Subnetからインターネットへ接続できない設計による想定どおりの動作であることを確認
 
 ---
 
-# 目的
+# 設計方針
 
-AWSサービスを個別に学習するだけではなく、実際の運用で利用されるアーキテクチャを題材に、設計・構築・Infrastructure as Codeを通して実践的なAWSインフラ設計スキルを習得することを目的としています。
+本プロジェクトでは、以下の方針でTerraformを実装しています。
+
+- AWSコンソールで構築した内容をTerraformで再現する
+- コードを設計書として読めることを重視する
+- 重要なデフォルト値は明示する
+- 利用しないオプションは記述しない
+- AWSリソース単位でTerraformファイルを分割する
+- 可読性と保守性を重視した構成とする
+
+---
+
+# 学んだこと
+
+本プロジェクトを通じて、以下の内容を理解・習得しました。
+
+- AWSコンソールとTerraformの対応関係
+- AWSリソース間の依存関係
+- Terraform Registryを利用した実装方法
+- `plan`・`apply`・`destroy` を用いたIaC運用
+- コードによるインフラ構成管理の考え方
+
+---
+
+# 今後の改善予定
+
+- NAT Gatewayを追加した構成
+- Terraform Module化
+- `locals` の活用
+- `for_each` を利用したリファクタリング
+- CI/CDによるTerraform実行の自動化
