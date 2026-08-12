@@ -1,35 +1,36 @@
 # AWSインフラ設計・構築
 
-AWSインフラ設計・構築およびTerraformによるInfrastructure as Code（IaC）の学習・検証リポジトリです。  
-AWSコンソールで設計・構築・動作確認した環境をTerraformでコード化し、設計から構築・検証まで一貫して実施しています。  
-Terraformの文法を学ぶことだけではなく、AWSサービスの役割や設計意図を理解し、Infrastructure as Code（IaC）として再現できることを目的としています。  
-本リポジトリでは、AWSで利用される代表的なアーキテクチャを題材に、設計・構築・IaCまでを一貫して学習・実装していきます。  
+AWSで利用される代表的なアーキテクチャを題材に、
+AWSインフラの設計・構築およびTerraformによるInfrastructure as Code（IaC）を学習・検証するリポジトリです。  
+AWSサービスを個別に学習するだけではなく、
+アーキテクチャ全体の構成や各サービスの役割、サービス間の連携、設計意図を理解したうえで、
+AWSコンソールによる構築からTerraformによる再現まで一貫して実施しています。
 
 ---
 
-# 学習方針
+# 学習・検証方針
 
-本リポジトリでは、以下の流れで学習を進めています。
+各アーキテクチャについて、以下の流れで学習・検証しています。
 
-1. AWSコンソールで設計・構築
-2. 動作確認
-3. 構築手順の整理
-4. TerraformによるIaC化
-5. `terraform plan` / `terraform apply` / `terraform destroy` による検証
-6. GitHubによるソースコード管理
+1. アーキテクチャの設計
+2. AWSコンソールによる構築
+3. 動作確認・検証
+4. 構築手順の整理
+5. TerraformによるIaC化
+6. `terraform plan` / `terraform apply` / `terraform destroy` による再現性の確認
+7. Terraformで再構築した環境での動作確認
+8. GitHubによるソースコード・ドキュメント管理
 
 ---
 
 # プロジェクト一覧
 
 | 状態 | パターン | 内容 |
-|------|----------|------|
+| --- | --- | --- |
 | Completed | Pattern 1 | 高可用Webアーキテクチャ |
-| In Progress | Pattern 2 | イベント駆動アーキテクチャ |
+| Completed | Pattern 2 | イベント駆動アーキテクチャ |
 | Planned | Pattern 3 | CI/CDパイプライン |
-| Planned | Pattern 4 | サーバーレスアーキテクチャ |
-| Planned | Pattern 5 | コンテナアーキテクチャ |
-| Planned | Pattern 6 | 静的サイト配信アーキテクチャ |
+| Planned | Pattern 4 | コンテナアーキテクチャ |
 
 ---
 
@@ -37,7 +38,8 @@ Terraformの文法を学ぶことだけではなく、AWSサービスの役割�
 
 ## Pattern 1 - 高可用Webアーキテクチャ
 
-AWS上に高可用なWebアーキテクチャを構築し、AWSコンソールで設計・構築した構成をTerraformでコード化しています。
+AWS上に高可用なWebアーキテクチャを設計・構築し、
+AWSコンソールで構築・検証した構成をTerraformでコード化しています。
 
 ### 主な構成
 
@@ -60,69 +62,42 @@ AWS上に高可用なWebアーキテクチャを構築し、AWSコンソール�
 
 ## Pattern 2 - イベント駆動アーキテクチャ
 
-AWSイベントを契機とした自動処理アーキテクチャを構築します。
+Amazon S3への画像アップロードを契機として、
+画像の検証・リサイズ・保存・通知を自動実行するイベント駆動アーキテクチャを設計・構築しています。  
+AWSコンソールで構築・動作確認した構成をTerraformでコード化し、
+Terraformによる再構築後も正常系・異常系を含めた動作確認を実施しています。
 
-### 学習予定サービス
+### 主な構成
 
+- Amazon S3
 - Amazon EventBridge
 - AWS Lambda
 - Amazon SNS
-- Amazon SQS
-- Amazon CloudWatch
+- AWS IAM
+- Amazon CloudWatch Logs
+- Python
+- boto3
+- Pillow
+- Terraform
+
+詳細は `event-driven/README.md` を参照してください。
 
 ---
 
 ## Pattern 3 - CI/CDパイプライン
 
-ソースコード管理からデプロイまでの自動化基盤を構築します。
-
-### 学習予定サービス
-
-- GitHub Actions
-- AWS CodePipeline
-- AWS CodeBuild
-- AWS CodeDeploy
+CI/CDパイプラインを題材としたアーキテクチャを設計・構築します。
 
 ---
 
-## Pattern 4 - サーバーレスアーキテクチャ
+## Pattern 4 - コンテナアーキテクチャ
 
-サーバーレスアーキテクチャを構築します。
-
-### 学習予定サービス
-
-- Amazon API Gateway
-- AWS Lambda
-- Amazon DynamoDB
-
----
-
-## Pattern 5 - コンテナアーキテクチャ
-
-コンテナを利用したアプリケーション実行アーキテクチャを構築します。
-
-### 学習予定サービス
-
-- Amazon ECS
-- Amazon ECR
-- Application Load Balancer
-- Auto Scaling
-
----
-
-## Pattern 6 - 静的サイト配信アーキテクチャ
-
-静的Webサイト配信アーキテクチャを構築します。
-
-### 学習予定サービス
-
-- Amazon S3
-- Amazon CloudFront
-- Amazon Route 53
-- AWS Certificate Manager（ACM）
+コンテナを利用したアーキテクチャを設計・構築します。
 
 ---
 
 # 目的
 
-AWSサービスを個別に学習するだけではなく、実際の運用で利用されるアーキテクチャを題材に、設計・構築・Infrastructure as Codeを通して実践的なAWSインフラ設計スキルを習得することを目的としています。
+AWSサービスの個別機能や操作方法を学習するだけではなく、
+代表的なアーキテクチャを題材として設計・構築・検証・IaC化までを一貫して経験することで、
+AWSインフラに関する設計・構築スキルを実践的に身につけることを目的としています。

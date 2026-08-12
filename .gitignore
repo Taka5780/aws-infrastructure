@@ -20,3 +20,6 @@ override.tf.json
 # CLI configuration
 .terraformrc
 terraform.rc
+
+# Lambda deployment packages
+*.zip
