@@ -23,3 +23,8 @@ terraform.rc
 
 # Lambda deployment packages
 *.zip
+
+# python
+.venv/
+__pycache__/
+.pytest_cache/

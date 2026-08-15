@@ -1,0 +1,7 @@
+- name: Setting Up the CI/CD Environment
+  hosts: web
+  become: true
+  roles:
+    - code_deploy_agent
+    - app_runtime_environment
+    - app_release

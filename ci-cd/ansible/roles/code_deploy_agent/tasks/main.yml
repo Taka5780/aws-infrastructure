@@ -1,0 +1,22 @@
+- name: Install Ruby
+  ansible.builtin.dnf:
+    name: ruby
+    state: present
+
+- name: Download AWS CodeDeploy installer
+  ansible.builtin.get_url:
+    dest: /home/ec2-user/install
+    url: https://aws-codedeploy-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latestv2/install
+    mode: "0755"
+
+- name: Run AWS CodeDeploy agent installation
+  ansible.builtin.command:
+    cmd: ./install auto
+    chdir: /home/ec2-user
+    creates: /opt/codedeploy-agent/bin/codedeploy-agent
+
+- name: Starting the CodeDeploy Agent and Enabling Automatic Startup
+  ansible.builtin.systemd_service:
+    name: codedeploy-agent
+    state: started
+    enabled: true

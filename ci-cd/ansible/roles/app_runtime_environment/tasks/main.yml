@@ -1,0 +1,23 @@
+- name: Install Python3.12
+  ansible.builtin.dnf:
+    name: python3.12
+    state: present
+
+- name: Install Python3.12 pip
+  ansible.builtin.dnf:
+    name: python3.12-pip
+    state: present
+
+- name: Create the ci-cd-app directory
+  ansible.builtin.file:
+    path: /opt/ci-cd-app
+    state: directory
+    mode: "0755"
+    owner: ec2-user
+    group: ec2-user
+
+- name: Create Python virtual environment
+  ansible.builtin.command:
+    cmd: python3.12 -m venv /opt/ci-cd-app/.venv
+    creates: /opt/ci-cd-app/.venv/bin/python
+  become_user: ec2-user

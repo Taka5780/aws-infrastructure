@@ -1,0 +1,36 @@
+- name: Copy and place the requirements.txt file
+  ansible.builtin.copy:
+    src: files/requirements.txt
+    dest: /opt/ci-cd-app/requirements.txt
+    owner: ec2-user
+    group: ec2-user
+    mode: "0644"
+
+- name: Installing via pip from requirements.txt
+  ansible.builtin.pip:
+    requirements: /opt/ci-cd-app/requirements.txt
+    virtualenv: /opt/ci-cd-app/.venv
+  become_user: ec2-user
+
+- name: Copy application
+  ansible.builtin.copy:
+    src: files/main.py
+    dest: /opt/ci-cd-app/main.py
+    owner: ec2-user
+    group: ec2-user
+    mode: "0644"
+
+- name: Copy systemd unit file
+  ansible.builtin.copy:
+    src: files/ci-cd-app.service
+    dest: /etc/systemd/system/ci-cd-app.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Start and enable application service
+  ansible.builtin.systemd_service:
+    name: ci-cd-app
+    daemon_reload: true
+    enabled: true
+    state: started
