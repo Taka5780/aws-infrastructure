@@ -10,4 +10,4 @@ def vitality_monitoring():
 
 @app.get("/version")
 def check_version():
-    return {"version": "1.2"}
+    return {"version": "1.3"}
