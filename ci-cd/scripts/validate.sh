@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 1. healthの判定
+# healthの判定
 for i in {1..6}; do
     HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/health")
 
@@ -18,7 +18,7 @@ for i in {1..6}; do
     sleep 5
 done
 
-# 2. versionの判定
+# versionの判定
 if [ "$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000/version")" -eq 200 ]; then
     echo "Version: 200 OK"
 else
