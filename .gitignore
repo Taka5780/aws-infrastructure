@@ -28,3 +28,6 @@ terraform.rc
 .venv/
 __pycache__/
 .pytest_cache/
+
+# ansible
+ci-cd/ansible/inventory

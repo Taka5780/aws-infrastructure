@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+
+files:
+  - source: app/main.py
+    destination: /opt/ci-cd-app/
+  - source: app/requirements.txt
+    destination: /opt/ci-cd-app/
+
+hooks:
+  ApplicationStart:
+    - location: scripts/restart.sh
+      timeout: 60
+      runas: root
+
+  ValidateService:
+    - location: scripts/validate.sh
+      timeout: 60
+      runas: root
