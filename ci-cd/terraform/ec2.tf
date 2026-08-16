@@ -4,6 +4,7 @@ resource "aws_instance" "study_web" {
   key_name               = var.key_name
   subnet_id              = aws_subnet.public_study_subnet.id
   vpc_security_group_ids = [aws_security_group.study_web_sg.id]
+  iam_instance_profile   = aws_iam_instance_profile.study_ec2_profile.name
 
   root_block_device {
     volume_size = 8
